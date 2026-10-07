@@ -1,0 +1,213 @@
+/* =========================================================
+   GLASSMORPHISM + MOTION ENHANCEMENT LAYER
+   ========================================================= */
+
+/* ---- ambient mouse light ---- */
+.mouse-light{
+  position:fixed; top:0; left:0; width:520px; height:520px; border-radius:50%;
+  background:radial-gradient(circle, rgba(247,244,239,.5) 0%, rgba(247,244,239,0) 70%);
+  transform:translate(-50%,-50%); pointer-events:none; z-index:2; mix-blend-mode:soft-light;
+  opacity:0; transition:opacity .4s ease; will-change:transform;
+}
+.mouse-light.active{opacity:1;}
+@media(max-width:900px), (hover:none){ .mouse-light{display:none;} }
+
+/* ---- custom cursor ---- */
+.cursor-dot, .cursor-ring{
+  position:fixed; top:0; left:0; pointer-events:none; z-index:9998;
+  transform:translate(-50%,-50%); will-change:transform;
+}
+.cursor-dot{
+  width:6px; height:6px; border-radius:50%; background:var(--terracotta);
+  transition:opacity .2s ease, background .2s ease;
+}
+.cursor-ring{
+  width:64px; height:64px; border-radius:50%;
+  background:rgba(247,244,239,.14); backdrop-filter:blur(6px);
+  border:1px solid rgba(247,244,239,.5);
+  display:flex; align-items:center; justify-content:center;
+  font-size:10.5px; letter-spacing:.1em; color:var(--ivory); font-weight:700;
+  opacity:0; scale:.6; transition:opacity .3s var(--ease), scale .3s var(--ease), background .3s ease, border-color .3s ease;
+}
+.cursor-ring.show{opacity:1; scale:1;}
+.cursor-ring.dark{color:var(--charcoal); border-color:rgba(28,28,28,.35); background:rgba(28,28,28,.08);}
+body.has-custom-cursor, body.has-custom-cursor a, body.has-custom-cursor button, body.has-custom-cursor .mason-item, body.has-custom-cursor input, body.has-custom-cursor select, body.has-custom-cursor textarea{cursor:none;}
+@media(max-width:900px), (hover:none){
+  .cursor-dot, .cursor-ring{display:none !important;}
+  body.has-custom-cursor, body.has-custom-cursor *{cursor:auto !important;}
+}
+
+/* ---- glass nav refinement ---- */
+header{ padding:22px 0; }
+.nav-shell{
+  transition: background .5s var(--ease), backdrop-filter .5s var(--ease), border-radius .5s var(--ease),
+              padding .5s var(--ease), border-color .5s var(--ease), box-shadow .5s var(--ease), margin .5s var(--ease);
+  border-radius:0; border:1px solid transparent;
+}
+header.scrolled .nav-shell{
+  background:var(--glass-ivory-strong); backdrop-filter:blur(22px) saturate(140%); -webkit-backdrop-filter:blur(22px) saturate(140%);
+  border:1px solid var(--glass-border); border-radius:999px; box-shadow:var(--glass-shadow);
+  padding:12px 24px; margin:0 2vw;
+}
+header{background:transparent; border-bottom:none;}
+header.scrolled{background:transparent; border-bottom:none; padding:16px 0;}
+
+/* ---- floating glass booking button (desktop) ---- */
+.float-cta{
+  position:fixed; right:38px; bottom:38px; z-index:450;
+  display:inline-flex; align-items:center; gap:10px;
+  padding:16px 26px; border-radius:999px;
+  background:var(--glass-charcoal-strong); backdrop-filter:blur(18px) saturate(140%); -webkit-backdrop-filter:blur(18px) saturate(140%);
+  border:1px solid rgba(247,244,239,.22); color:var(--ivory); font-size:13.5px; font-weight:600;
+  box-shadow:0 10px 30px rgba(28,28,28,.22);
+  transition:transform .4s var(--ease), background .35s ease, box-shadow .35s ease;
+}
+.float-cta .arrow{transition:transform .35s var(--ease); display:inline-block;}
+.float-cta:hover{background:rgba(185,111,80,.85); box-shadow:0 14px 34px rgba(185,111,80,.35);}
+.float-cta:hover .arrow{transform:translate(4px,-2px);}
+@media(max-width:760px){.float-cta{display:none;}}
+
+/* ---- magnetic buttons (JS-driven transform wrapper) ---- */
+.magnetic{ display:inline-flex; will-change:transform; }
+
+/* ---- glass surfaces reused across site ---- */
+.glass-panel{
+  background:var(--glass-ivory-strong); backdrop-filter:blur(20px) saturate(150%); -webkit-backdrop-filter:blur(20px) saturate(150%);
+  border:1px solid var(--glass-border); box-shadow:var(--glass-shadow); border-radius:4px;
+}
+.glass-panel-dark{
+  background:var(--glass-charcoal-strong); backdrop-filter:blur(20px) saturate(150%); -webkit-backdrop-filter:blur(20px) saturate(150%);
+  border:1px solid var(--glass-border-dark); box-shadow:0 10px 40px rgba(0,0,0,.28); border-radius:4px;
+}
+
+/* ---- hero focus frame + text mask reveal ---- */
+.hero-focus{
+  position:absolute; width:90px; height:90px; z-index:2; pointer-events:none;
+  right:9vw; top:16vw; opacity:0; transition:opacity .6s ease .9s;
+}
+.hero.loaded .hero-focus{opacity:.85;}
+.hero-focus span{position:absolute; width:16px; height:16px; border-color:rgba(247,244,239,.85);}
+.hero-focus .tl{top:0;left:0;border-top:1px solid;border-left:1px solid;}
+.hero-focus .tr{top:0;right:0;border-top:1px solid;border-right:1px solid;}
+.hero-focus .bl{bottom:0;left:0;border-bottom:1px solid;border-left:1px solid;}
+.hero-focus .br{bottom:0;right:0;border-bottom:1px solid;border-right:1px solid;}
+@media(max-width:760px){.hero-focus{display:none;}}
+
+.mask-line{overflow:hidden; display:block;}
+.mask-line > span{display:block; transform:translateY(115%); transition:transform .9s var(--ease);}
+.hero.loaded .mask-line > span{transform:translateY(0);}
+.hero.loaded .mask-line:nth-child(1) > span{transition-delay:.15s;}
+.hero.loaded .mask-line:nth-child(2) > span{transition-delay:.28s;}
+
+.hero-sub, .hero-ctas, .hero-loc{opacity:0; transform:translateY(14px); transition:opacity .7s var(--ease), transform .7s var(--ease);}
+.hero.loaded .hero-loc{opacity:1; transform:none; transition-delay:.05s;}
+.hero.loaded .hero-sub{opacity:1; transform:none; transition-delay:.55s;}
+.hero.loaded .hero-ctas{opacity:1; transform:none; transition-delay:.7s;}
+
+/* ---- parallax layers ---- */
+.hero-media img{will-change:transform;}
+.hero-content{will-change:transform;}
+
+/* ---- portfolio: masked reveal + tilt + view label ---- */
+.mason-item{ perspective:800px; }
+.mason-item .mask-reveal{
+  position:relative; overflow:hidden; border-radius:2px; clip-path:inset(0 0 0 0);
+}
+.mason-item.pre-reveal img{ transform:scale(1.12); }
+.mason-item.pre-reveal{ opacity:0; transform:translateY(30px); }
+.mason-item.in-view{ opacity:1; transform:translateY(0); transition:opacity .9s var(--ease), transform .9s var(--ease); }
+.mason-item.in-view img{ transition:transform 1.1s var(--ease); }
+.mason-item.in-view.settled img{ transform:scale(1); }
+.mason-item .tilt-inner{ transition:transform .25s ease-out; transform-style:preserve-3d; }
+
+/* ---- glass service panel ---- */
+.service-visual{ border-radius:4px; }
+.service-panel{
+  position:absolute; left:20px; right:20px; bottom:20px; z-index:2;
+  padding:20px 22px; color:var(--ivory);
+}
+.service-panel .sp-num{font-size:11px; color:var(--terracotta); letter-spacing:.08em; margin-bottom:6px;}
+.service-panel h4{font-family:var(--serif); font-style:italic; font-weight:400; font-size:20px; margin-bottom:6px;}
+.service-panel p{font-size:12.5px; color:rgba(247,244,239,.75); line-height:1.5; margin-bottom:10px;}
+.service-panel .sp-link{font-size:12.5px; font-weight:700;}
+
+/* ---- horizontal reel ---- */
+.reel-section{ overflow:hidden; }
+.reel-head{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:40px; gap:20px; flex-wrap:wrap;}
+.reel-progress{font-size:13px; color:var(--terracotta); font-weight:600; letter-spacing:.04em;}
+.reel-track{
+  display:flex; gap:20px; overflow-x:auto; scroll-snap-type:x proximity; padding-bottom:10px;
+  cursor:grab;
+}
+.reel-track:active{cursor:grabbing;}
+.reel-card{
+  position:relative; min-width:320px; max-width:320px; aspect-ratio:3/4; border-radius:3px; overflow:hidden;
+  scroll-snap-align:start; flex-shrink:0;
+}
+.reel-card img{width:100%; height:100%; object-fit:cover; transition:transform .8s var(--ease);}
+.reel-card:hover img{transform:scale(1.05);}
+.reel-card .rc-label{
+  position:absolute; left:16px; bottom:16px; color:var(--ivory);
+  padding:8px 14px; font-size:12.5px; font-weight:600;
+}
+@media(max-width:640px){ .reel-card{min-width:78vw; max-width:78vw;} }
+
+/* ---- lightbox ---- */
+.lightbox{
+  position:fixed; inset:0; z-index:9000; display:flex; align-items:center; justify-content:center;
+  opacity:0; visibility:hidden; transition:opacity .45s var(--ease), visibility .45s var(--ease);
+}
+.lightbox.open{opacity:1; visibility:visible;}
+.lightbox-bg{position:absolute; inset:0; background:rgba(20,18,16,.72); backdrop-filter:blur(18px);}
+.lightbox-inner{position:relative; z-index:2; max-width:min(88vw,900px); width:100%; text-align:center;}
+.lightbox-img-wrap{
+  border-radius:4px; overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,.4);
+  transform:scale(.94); transition:transform .45s var(--ease);
+}
+.lightbox.open .lightbox-img-wrap{transform:scale(1);}
+.lightbox-img-wrap img{width:100%; max-height:74vh; object-fit:cover; display:block;}
+.lightbox-cap{margin-top:18px; color:var(--ivory); font-size:13.5px; display:flex; justify-content:center; gap:14px; align-items:center;}
+.lightbox-cap .lc-count{color:rgba(247,244,239,.55);}
+.lightbox-close, .lightbox-nav{
+  position:absolute; top:50%; transform:translateY(-50%); width:48px; height:48px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; color:var(--ivory); font-size:18px;
+  background:rgba(247,244,239,.1); backdrop-filter:blur(12px); border:1px solid rgba(247,244,239,.25);
+  transition:background .25s ease;
+}
+.lightbox-nav:hover, .lightbox-close:hover{background:rgba(247,244,239,.2);}
+.lb-prev{left:-64px;} .lb-next{right:-64px;}
+.lightbox-close{top:-64px; right:0; transform:none;}
+@media(max-width:900px){ .lb-prev{left:6px;} .lb-next{right:6px;} .lightbox-close{top:16px; right:16px;} }
+
+/* ---- glass booking modal ---- */
+.booking-modal{
+  position:fixed; inset:0; z-index:9100; display:flex; align-items:center; justify-content:center;
+  padding:30px; opacity:0; visibility:hidden; transition:opacity .4s var(--ease), visibility .4s var(--ease);
+}
+.booking-modal.open{opacity:1; visibility:visible;}
+.booking-modal-bg{position:absolute; inset:0; background:rgba(20,18,16,.55); backdrop-filter:blur(14px);}
+.booking-modal-panel{
+  position:relative; z-index:2; width:100%; max-width:640px; max-height:86vh; overflow-y:auto;
+  padding:44px; transform:scale(.96); transition:transform .4s var(--ease);
+  background:var(--glass-ivory-strong); backdrop-filter:blur(26px) saturate(150%); -webkit-backdrop-filter:blur(26px) saturate(150%);
+  border:1px solid var(--glass-border); box-shadow:0 30px 80px rgba(28,28,28,.3); border-radius:6px;
+}
+.booking-modal.open .booking-modal-panel{transform:scale(1);}
+.booking-modal-close{position:absolute; top:22px; right:22px; font-size:22px; color:var(--charcoal);}
+@media(max-width:640px){ .booking-modal{padding:0;} .booking-modal-panel{max-width:100%; height:100%; max-height:100%; border-radius:0; padding:34px 24px;} }
+
+/* ---- footer reveal ---- */
+.footer-cta{padding:100px 0 70px; text-align:left;}
+.footer-cta h2{
+  font-family:var(--serif); font-style:italic; font-weight:400; color:var(--ivory);
+  font-size:clamp(2rem,6vw,4.4rem); line-height:1.05; max-width:14ch;
+  overflow:hidden;
+}
+.footer-cta h2 span{display:inline-block; transform:translateY(110%); transition:transform 1s var(--ease);}
+.footer-cta.in h2 span{transform:translateY(0);}
+.footer-cta .btn{margin-top:34px;}
+
+/* ---- misc: buttons get relative positioning for magnetic JS ---- */
+.btn, .filter-btn, .nav-cta{ position:relative; }
+
+

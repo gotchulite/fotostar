@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in | Foto Star Nepal</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --charcoal:#1C1C1C; --ivory:#F7F4EF; --sand:#E9E1D6; --terracotta:#B96F50; --gray:#D8D3CC;
+  --terracotta-dark:#a15d41; --danger:#b3412f; --ok:#4f7a5a;
+  --serif:'DM Serif Display',serif; --sans:'Manrope',sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  font-family:var(--sans); background:var(--ivory); color:var(--charcoal);
+  min-height:100vh; min-height:100dvh; -webkit-font-smoothing:antialiased; letter-spacing:-.01em;
+}
+a{color:inherit;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+input{font-family:inherit;}
+:focus-visible{outline:2px solid var(--terracotta); outline-offset:3px;}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important;}}
+
+.shell{display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); min-height:100vh; min-height:100dvh;}
+
+/* ---------- Visual side ---------- */
+.visual{position:relative; overflow:hidden; background:var(--charcoal); color:var(--ivory); display:flex; flex-direction:column; justify-content:space-between; padding:clamp(28px,4vw,56px);}
+.visual img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:58% 40%; transform:scale(1.06); animation:settle 2.4s var(--ease) forwards;}
+@keyframes settle{to{transform:scale(1);}}
+.visual::before{content:''; position:absolute; inset:0; z-index:1; background:linear-gradient(180deg,rgba(20,18,16,.55) 0%,rgba(20,18,16,.12) 38%,rgba(20,18,16,.82) 100%), linear-gradient(90deg,rgba(20,18,16,.35),transparent 70%);}
+.visual>*:not(img){position:relative; z-index:2;}
+.brand{display:inline-flex; align-items:center; gap:12px; text-decoration:none; width:fit-content;}
+.brand svg{width:28px; height:28px; color:var(--terracotta);}
+.brand span{font-weight:800; font-size:13px; letter-spacing:.16em;}
+.visual-copy{max-width:520px;}
+.visual-kicker{display:flex; align-items:center; gap:10px; font-size:10px; font-weight:700; letter-spacing:.17em; text-transform:uppercase; color:rgba(247,244,239,.7); margin-bottom:18px;}
+.visual-kicker::before{content:''; width:6px; height:6px; border-radius:50%; background:var(--terracotta); box-shadow:0 0 14px rgba(185,111,80,.6);}
+.visual h2{font:italic 400 clamp(2.4rem,4.6vw,4.2rem)/1 var(--serif); letter-spacing:-.03em; max-width:12ch;}
+.visual p{margin-top:18px; max-width:38ch; font-size:13px; line-height:1.8; color:rgba(247,244,239,.74); transition:opacity .35s ease;}
+.focus-corners{position:absolute; z-index:2; right:clamp(28px,5vw,72px); top:clamp(90px,14vh,150px); width:84px; height:84px; opacity:.8; pointer-events:none;}
+.focus-corners i{position:absolute; width:16px; height:16px; border-color:rgba(247,244,239,.85); border-style:solid; border-width:0;}
+.focus-corners i:nth-child(1){top:0;left:0;border-top-width:1px;border-left-width:1px;}
+.focus-corners i:nth-child(2){top:0;right:0;border-top-width:1px;border-right-width:1px;}
+.focus-corners i:nth-child(3){bottom:0;left:0;border-bottom-width:1px;border-left-width:1px;}
+.focus-corners i:nth-child(4){bottom:0;right:0;border-bottom-width:1px;border-right-width:1px;}
+
+/* ---------- Form side ---------- */
+.panel{position:relative; display:flex; align-items:center; justify-content:center; padding:clamp(28px,5vw,64px) clamp(20px,5vw,72px);}
+.panel-top{position:absolute; top:clamp(20px,3vw,34px); left:clamp(20px,5vw,72px); right:clamp(20px,5vw,72px); display:flex; justify-content:space-between; align-items:center;}
+.back-link{display:inline-flex; align-items:center; gap:8px; min-height:44px; font-size:11px; font-weight:600; letter-spacing:.04em; color:rgba(28,28,28,.62); text-decoration:none; transition:color .2s ease;}
+.back-link:hover{color:var(--terracotta);}
+.back-link svg{width:14px; height:14px; transition:transform .25s var(--ease);}
+.back-link:hover svg{transform:translateX(-3px);}
+.panel-brand{display:none; font-weight:800; font-size:12px; letter-spacing:.16em; text-decoration:none;}
+
+.card{width:100%; max-width:420px; margin-top:28px;}
+.eyebrow{font-size:10px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--terracotta); margin-bottom:14px;}
+h1{font:italic 400 clamp(2rem,3.6vw,2.7rem)/1.05 var(--serif); letter-spacing:-.025em;}
+.sub{margin-top:12px; font-size:13px; line-height:1.7; color:rgba(28,28,28,.64); max-width:38ch;}
+
+/* role switch */
+.roles{position:relative; display:grid; grid-template-columns:1fr 1fr; margin:28px 0 26px; padding:4px; border-radius:999px; background:var(--sand); border:1px solid rgba(28,28,28,.06);}
+.roles .thumb{position:absolute; top:4px; bottom:4px; left:4px; width:calc(50% - 4px); border-radius:999px; background:var(--charcoal); box-shadow:0 6px 16px rgba(28,28,28,.18); transition:transform .45s var(--ease);}
+.roles[data-role="staff"] .thumb{transform:translateX(100%);}
+.roles button{position:relative; z-index:1; min-height:42px; display:flex; align-items:center; justify-content:center; gap:8px; font-size:12px; font-weight:700; letter-spacing:.02em; color:rgba(28,28,28,.62); border-radius:999px; transition:color .3s ease;}
+.roles button svg{width:15px; height:15px;}
+.roles button[aria-selected="true"]{color:var(--ivory);}
+
+/* views */
+.view{display:none;}
+.view.active{display:block; animation:viewIn .5s var(--ease) both;}
+@keyframes viewIn{from{opacity:0; transform:translateY(10px);}to{opacity:1; transform:none;}}
+
+.field{margin-bottom:18px;}
+.field label,.label-row{display:block; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(28,28,28,.66); margin-bottom:8px;}
+.label-row{display:flex; justify-content:space-between; align-items:center;}
+.label-row button,.label-row a{font-size:10px; font-weight:700; letter-spacing:.06em; color:var(--terracotta); text-transform:none; text-decoration:none; padding:4px 0;}
+.label-row button:hover{text-decoration:underline; text-underline-offset:3px;}
+.input-wrap{position:relative;}
+.input-wrap>svg.lead{position:absolute; left:14px; top:50%; width:16px; height:16px; transform:translateY(-50%); color:rgba(28,28,28,.4); pointer-events:none; transition:color .25s ease;}
+.input-wrap input{
+  width:100%; min-height:50px; padding:12px 14px 12px 42px; font-size:14px; font-weight:500; color:var(--charcoal);
+  background:rgba(255,255,255,.7); border:1px solid rgba(28,28,28,.16); border-radius:10px;
+  transition:border-color .25s ease, box-shadow .25s ease, background .25s ease;
+}
+.input-wrap input.has-toggle{padding-right:48px;}
+.input-wrap input::placeholder{color:rgba(28,28,28,.34);}
+.input-wrap input:hover{border-color:rgba(28,28,28,.3);}
+.input-wrap input:focus{outline:none; border-color:var(--terracotta); background:#fff; box-shadow:0 0 0 4px rgba(185,111,80,.14);}
+.input-wrap:focus-within>svg.lead{color:var(--terracotta);}
+.field.invalid input{border-color:var(--danger); box-shadow:0 0 0 4px rgba(179,65,47,.09);}
+.field-error{display:none; margin-top:7px; font-size:11px; font-weight:600; color:var(--danger); line-height:1.5;}
+.field.invalid .field-error{display:block; animation:viewIn .3s var(--ease) both;}
+.toggle-pw{position:absolute; right:4px; top:50%; transform:translateY(-50%); width:44px; height:44px; display:grid; place-items:center; color:rgba(28,28,28,.5); border-radius:8px; transition:color .2s ease;}
+.toggle-pw:hover{color:var(--charcoal);}
+.toggle-pw svg{width:18px; height:18px;}
+.toggle-pw .eye-off{display:none;}
+.toggle-pw.on .eye{display:none;} .toggle-pw.on .eye-off{display:block;}
+.field-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+
+.check{display:flex; align-items:center; gap:10px; font-size:12px; font-weight:500; color:rgba(28,28,28,.72); cursor:pointer; user-select:none; min-height:36px;}
+.check input{position:absolute; opacity:0; pointer-events:none;}
+.check .box{width:18px; height:18px; flex:0 0 18px; display:grid; place-items:center; border:1px solid rgba(28,28,28,.3); border-radius:5px; background:rgba(255,255,255,.7); transition:all .2s ease;}
+.check .box svg{width:11px; height:11px; color:var(--ivory); opacity:0; transform:scale(.6); transition:all .2s var(--ease);}
+.check input:checked+.box{background:var(--terracotta); border-color:var(--terracotta);}
+.check input:checked+.box svg{opacity:1; transform:none;}
+.check input:focus-visible+.box{outline:2px solid var(--terracotta); outline-offset:3px;}
+.row-between{display:flex; justify-content:space-between; align-items:center; gap:12px; margin:2px 0 22px;}
+
+.btn{
+  position:relative; width:100%; min-height:52px; display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  border-radius:999px; font-size:13px; font-weight:700; letter-spacing:.02em; color:var(--ivory); background:var(--terracotta);
+  box-shadow:0 10px 26px rgba(185,111,80,.26); transition:background .3s var(--ease), transform .3s var(--ease), box-shadow .3s var(--ease);
+  overflow:hidden;
+}
+.btn:hover{background:var(--terracotta-dark); transform:translateY(-1px); box-shadow:0 14px 30px rgba(185,111,80,.32);}
+.btn:active{transform:scale(.99);}
+.btn.dark{background:var(--charcoal); box-shadow:0 10px 26px rgba(28,28,28,.2);}
+.btn.dark:hover{background:#000; box-shadow:0 14px 30px rgba(28,28,28,.28);}
+.btn.ghost{background:transparent; color:var(--charcoal); border:1px solid rgba(28,28,28,.3); box-shadow:none;}
+.btn.ghost:hover{background:var(--charcoal); color:var(--ivory); border-color:var(--charcoal);}
+.btn .spinner{display:none; width:18px; height:18px; border:2px solid rgba(247,244,239,.35); border-top-color:var(--ivory); border-radius:50%; animation:spin .7s linear infinite;}
+.btn.loading{pointer-events:none;}
+.btn.loading .spinner{display:block;}
+.btn.loading .btn-label,.btn.loading .btn-arrow{display:none;}
+.btn.loading .btn-loading-label{display:inline;}
+.btn-loading-label{display:none;}
+.btn-arrow{width:16px; height:16px; transition:transform .25s var(--ease);}
+.btn:hover .btn-arrow{transform:translateX(3px);}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.alert{display:none; gap:10px; align-items:flex-start; margin-bottom:18px; padding:12px 14px; border-radius:10px; font-size:12px; font-weight:600; line-height:1.55;}
+.alert svg{width:16px; height:16px; flex:0 0 16px; margin-top:1px;}
+.alert.show{display:flex; animation:viewIn .35s var(--ease) both;}
+.alert.error{background:rgba(179,65,47,.09); color:#8f3223; border:1px solid rgba(179,65,47,.22);}
+.alert.info{background:rgba(185,111,80,.1); color:#7c4630; border:1px solid rgba(185,111,80,.25);}
+.alert.okay{background:rgba(79,122,90,.1); color:#3a6046; border:1px solid rgba(79,122,90,.25);}
+.shake{animation:shake .45s var(--ease);}
+@keyframes shake{20%,60%{transform:translateX(-6px);}40%,80%{transform:translateX(6px);}}
+
+.switch-line{margin-top:24px; text-align:center; font-size:12px; color:rgba(28,28,28,.62);}
+.switch-line button{font-weight:700; color:var(--charcoal); border-bottom:1px solid var(--terracotta); padding-bottom:1px; transition:color .2s ease;}
+.switch-line button:hover{color:var(--terracotta);}
+
+.divider{display:flex; align-items:center; gap:14px; margin:22px 0; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(28,28,28,.38);}
+.divider::before,.divider::after{content:''; flex:1; height:1px; background:rgba(28,28,28,.12);}
+
+.strength{margin-top:10px; display:grid; grid-template-columns:repeat(4,1fr); gap:5px;}
+.strength span{height:3px; border-radius:2px; background:rgba(28,28,28,.12); transition:background .3s ease;}
+.strength-text{margin-top:7px; font-size:11px; font-weight:600; color:rgba(28,28,28,.5); min-height:16px;}
+.s1 span:nth-child(-n+1){background:#c4574a;} .s2 span:nth-child(-n+2){background:#d08a45;}
+.s3 span:nth-child(-n+3){background:#a3a04a;} .s4 span{background:var(--ok);}
+
+.staff-note{display:flex; gap:12px; align-items:flex-start; margin-bottom:22px; padding:14px 16px; border-radius:10px; background:var(--charcoal); color:rgba(247,244,239,.82); font-size:12px; line-height:1.65;}
+.staff-note svg{width:18px; height:18px; flex:0 0 18px; color:var(--terracotta); margin-top:1px;}
+.demo-box{margin-top:22px; padding:14px 16px; border:1px dashed rgba(28,28,28,.25); border-radius:10px; font-size:11px; line-height:1.7; color:rgba(28,28,28,.66);}
+.demo-box b{display:block; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--terracotta); margin-bottom:4px;}
+.demo-box code{font:600 11px ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--charcoal); background:rgba(28,28,28,.06); padding:1px 6px; border-radius:4px;}
+.demo-box button{margin-top:8px; font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terracotta); border-bottom:1px solid currentColor;}
+
+.legal{margin-top:26px; text-align:center; font-size:10px; line-height:1.7; color:rgba(28,28,28,.46);}
+
+/* success */
+.success{text-align:left;}
+.success-mark{width:64px; height:64px; margin-bottom:26px; border-radius:50%; display:grid; place-items:center; background:rgba(185,111,80,.12); border:1px solid rgba(185,111,80,.5);}
+.success-mark svg{width:30px; height:30px; color:var(--terracotta);}
+.success-mark path{stroke-dasharray:30; stroke-dashoffset:30; animation:draw .7s .2s var(--ease) forwards;}
+@keyframes draw{to{stroke-dashoffset:0;}}
+.session-card{margin:26px 0; border:1px solid rgba(28,28,28,.1); border-radius:12px; background:rgba(255,255,255,.6); overflow:hidden;}
+.session-row{display:flex; justify-content:space-between; gap:16px; padding:13px 16px; font-size:12px; border-bottom:1px solid rgba(28,28,28,.08);}
+.session-row:last-child{border-bottom:none;}
+.session-row span:first-child{font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(28,28,28,.46); padding-top:2px;}
+.session-row span:last-child{font-weight:600; text-align:right; overflow-wrap:anywhere;}
+.badge{display:inline-block; padding:3px 10px; border-radius:999px; font-size:10px; font-weight:700; letter-spacing:.06em; background:var(--charcoal); color:var(--ivory);}
+.badge.client{background:var(--terracotta);}
+.stack{display:grid; gap:10px;}
+.progress{height:2px; margin-top:20px; background:rgba(28,28,28,.1); overflow:hidden; border-radius:2px; display:none;}
+.progress.run{display:block;}
+.progress i{display:block; height:100%; width:0; background:var(--terracotta); animation:fill 2.2s linear forwards;}
+@keyframes fill{to{width:100%;}}
+.redirect-note{display:none; margin-top:10px; font-size:11px; color:rgba(28,28,28,.55);}
+.redirect-note.show{display:block;}
+
+/* toast */
+.toast{position:fixed; left:50%; bottom:28px; z-index:50; transform:translate(-50%,30px); opacity:0; pointer-events:none; padding:13px 20px; border-radius:999px; font-size:12px; font-weight:600; color:var(--ivory); background:rgba(28,28,28,.92); backdrop-filter:blur(14px); box-shadow:0 14px 40px rgba(0,0,0,.25); transition:all .45s var(--ease); max-width:calc(100vw - 32px); text-align:center;}
+.toast.show{opacity:1; transform:translate(-50%,0);}
+
+@media(max-width:960px){
+  .shell{grid-template-columns:1fr;}
+  .visual{display:none;}
+  .panel{align-items:flex-start; padding-top:96px;}
+  .panel-brand{display:inline-block;}
+  .card{margin-top:8px;}
+}
+@media(max-width:480px){
+  .field-row{grid-template-columns:1fr; gap:0;}
+  .input-wrap input{font-size:16px;}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ====== Visual side ====== -->
+  <aside class="visual" aria-hidden="true">
+    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1800&auto=format&fit=crop" alt="">
+    <a class="brand" href="./index.html" tabindex="-1">
+      <svg viewBox="0 0 32 32" fill="none"><path d="M5 12V5h7M20 5h7v7M27 20v7h-7M12 27H5v-7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="16" cy="16" r="6.2" stroke="currentColor" stroke-width="1.4"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/></svg>
+      <span>FOTO STAR NEPAL</span>
+    </a>
+    <div class="focus-corners"><i></i><i></i><i></i><i></i></div>
+    <div class="visual-copy">
+      <div class="visual-kicker" id="visualKicker">Client portal</div>
+      <h2 id="visualTitle">Moments worth remembering.</h2>
+      <p id="visualText">Sign in to manage your bookings, follow your shoot and keep every memory in one place.</p>
+    </div>
+  </aside>
+
+  <!-- ====== Form side ====== -->
+  <main class="panel">
+    <div class="panel-top">
+      <a class="back-link" href="./index.html">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to website
+      </a>
+      <a class="panel-brand" href="./index.html">FOTO STAR</a>
+    </div>
+
+    <div class="card" id="card">
+
+      <!-- Header (changes per view) -->
+      <div id="head">
+        <div class="eyebrow" id="eyebrow">Welcome back</div>
+        <h1 id="title">Sign in to your account.</h1>
+        <p class="sub" id="subtitle">Enter your details to continue.</p>
+      </div>
+
+      <!-- Role switch -->
+      <div class="roles" id="roles" data-role="client" role="tablist" aria-label="Account type">
+        <span class="thumb" aria-hidden="true"></span>
+        <button type="button" role="tab" aria-selected="true" data-role="client">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.6" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c.6-3.6 3.5-5.5 7-5.5s6.4 1.9 7 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Client
+        </button>
+        <button type="button" role="tab" aria-selected="false" data-role="staff">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Staff
+        </button>
+      </div>
+
+      <!-- ===== CLIENT SIGN IN ===== -->
+      <section class="view active" id="view-client-signin">
+        <div class="alert error" id="clientSigninAlert" role="alert"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.5v5.5M12 16.4v.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span></span></div>
+        <form id="clientSigninForm" novalidate>
+          <div class="field" data-field="email">
+            <label for="cEmail">Email address</label>
+            <div class="input-wrap">
+              <svg class="lead" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="m4.5 7.5 7.5 5.5 7.5-5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <input type="email" id="cEmail" autocomplete="email" placeholder="you@example.com" inputmode="email" autocapitalize="off" spellcheck="false">
+            </div>
+            <div class="field-error">Enter a valid email address.</div>
+          </div>
+          <div class="field" data-field="password">
+            <div class="label-row"><label for="cPass" style="margin:0">Password</label><button type="button" data-goto="forgot">Forgot password?</button></div>
+            <div class="input-wrap">
+              <svg class="lead" viewBox="0 0 24 24" fill="none"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <input type="password" id="cPass" class="has-toggle" autocomplete="current-password" placeholder="Your password">
+              <button type="button" class="toggle-pw" aria-label="Show password" data-toggle="cPass">
+                <svg class="eye" viewBox="0 0 24 24" fill="none"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+                <svg class="eye-off" viewBox="0 0 24 24" fill="none"><path d="M3 3l18 18M10.6 6a9.6 9.6 0 0 1 1.4-.1c6 0 9.5 6.1 9.5 6.1a16 16 0 0 1-3 3.7M6.4 7.7A16 16 0 0 0 2.5 12S6 18.5 12 18.5c1.5 0 2.9-.4 4.1-1M9.9 10a3 3 0 0 0 4.1 4.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+            <div class="field-error">Enter your password.</div>
+          </div>
+          <div class="row-between">
+            <label class="check"><input type="checkbox" id="cRemember"><span class="box"><svg viewBox="0 0 12 12" fill="none"><path d="m2.5 6.3 2.4 2.4 4.6-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Keep me signed in</label>
+          </div>
+          <button type="submit" class="btn">
+            <span class="spinner" aria-hidden="true"></span>
+            <span class="btn-label">Sign in</span><span class="btn-loading-label">Signing in…</span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </form>
+        <div class="switch-line">New to Foto Star? <button type="button" data-goto="signup">Create an account</button></div>
+      </section>
+
+      <!-- ===== CLIENT SIGN UP ===== -->
+      <section class="view" id="view-client-signup">
+        <div class="alert error" id="signupAlert" role="alert"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.5v5.5M12 16.4v.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span></span></div>
+        <form id="signupForm" novalidate>
+          <div class="field" data-field="name">
+            <label for="sName">Full name</label>
+            <div class="input-wrap">
+              <svg class="lead" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.6" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c.6-3.6 3.5-5.5 7-5.5s6.4 1.9 7 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <input type="text" id="sName" autocomplete="name" placeholder="Your full name">
+            </div>
+            <div class="field-error">Please enter your full name.</div>
+          </div>
+          <div class="field-row">
+            <div class="field" data-field="email">
+              <label for="sEmail">Email</label>
+              <div class="input-wrap">
+                <svg class="lead" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="m4.5 7.5 7.5 5.5 7.5-5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <input type="email" id="sEmail" autocomplete="email" placeholder="you@example.com" autocapitalize="off" spellcheck="false">
+              </div>
+              <div class="field-error">Enter a valid email.</div>
+            </div>
+            <div class="field" data-field="phone">
+              <label for="sPhone">Phone</label>
+              <div class="input-wrap">
+                <svg class="lead" viewBox="0 0 24 24" fill="none"><path d="M6.6 4.2a1.8 1.8 0 0 1 1.7 1.1l.8 2.1a1.8 1.8 0 0 1-.5 1.9l-1 .9a13.7 13.7 0 0 0 7.5 7.5l.9-1a1.8 1.8 0 0 1 1.9-.5l2.1.8a1.8 1.8 0 0 1 1.1 1.7v2.1A1.8 1.8 0 0 1 19.4 20c-8.9 0-16.2-7.3-16.2-16.2A1.8 1.8 0 0 1 5 2h2.1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                <input type="tel" id="sPhone" autocomplete="tel" placeholder="+977" inputmode="tel">
+              </div>
+              <div class="field-error">Enter a valid phone number.</div>
+            </div>
+          </div>
+          <div class="field" data-field="password">
+            <label for="sPass">Create password</label>
+            <div class="input-wrap">
+              <svg class="lead" viewBox="0 0 24 24" fill="none"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <input type="password" id="sPass" class="has-toggle" autocomplete="new-password" placeholder="At least 8 characters">
+              <button type="button" class="toggle-pw" aria-label="Show password" data-toggle="sPass">
+                <svg class="eye" viewBox="0 0 24 24" fill="none"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+                <svg class="eye-off" viewBox="0 0 24 24" fill="none"><path d="M3 3l18 18M10.6 6a9.6 9.6 0 0 1 1.4-.1c6 0 9.5 6.1 9.5 6.1a16 16 0 0 1-3 3.7M6.4 7.7A16 16 0 0 0 2.5 12S6 18.5 12 18.5c1.5 0 2.9-.4 4.1-1M9.9 10a3 3 0 0 0 4.1 4.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+            <div class="strength" id="strengthBar" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+            <div class="strength-text" id="strengthText">Use 8+ characters with letters and numbers.</div>
+            <div class="field-error">Password must be at least 8 characters.</div>
+          </div>
+          <div class="field" data-field="confirm">
+            <label for="sConfirm">Confirm password</label>
+            <div class="input-wrap">
+              <svg class="lead" viewBox="0 0 24 24" fill="none"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <input type="password" id="sConfirm" autocomplete="new-password" placeholder="Repeat your password">
+            </div>
+            <div class="field-error">Passwords do not match.</div>
+          </div>
+          <div class="field" data-field="terms" style="margin-bottom:22px">
+            <label class="check" style="align-items:flex-start"><input type="checkbox" id="sTerms"><span class="box" style="margin-top:1px"><svg viewBox="0 0 12 12" fill="none"><path d="m2.5 6.3 2.4 2.4 4.6-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="line-height:1.5">I agree to the Terms of Service and Privacy Policy.</span></label>
+            <div class="field-error">Please accept the terms to continue.</div>
+          </div>
+          <button type="submit" class="btn">
+            <span class="spinner" aria-hidden="true"></span>
+            <span class="btn-label">Create account</span><span class="btn-loading-label">Creating account…</span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </form>
+        <div class="switch-line">Already have an account? <button type="button" data-goto="signin">Sign in</button></div>
+      </section>
+
+      <!-- ===== FORGOT PASSWORD ===== -->
+      <section class="view" id="view-forgot">
+        <div class="alert okay" id="forgotAlert" role="status"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="m8.2 12.3 2.6 2.6 5-5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span></span></div>
+        <form id="forgotForm" novalidate>
+          <div class="field" data-field="email">
+            <label for="fEmail">Account email</label>
+            <div class="input-wrap">
+              <svg class="lead" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="m4.5 7.5 7.5 5.5 7.5-5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <input type="email" id="fEmail" autocomplete="email" placeholder="you@example.com" autocapitalize="off" spellcheck="false">
+            </div>
+            <div class="field-error">Enter a valid email address.</div>
+          </div>
+          <button type="submit" class="btn">
+            <span class="spinner" aria-hidden="true"></span>
+            <span class="btn-label">Send reset link</span><span class="btn-loading-label">Sending…</span>
+          </button>
+        </form>
+        <div class="switch-line"><button type="button" data-goto="signin">← Back to sign in</button></div>
+      </section>
+
+      <!-- ===== STAFF SIGN IN ===== -->
+      <section class="view" id="view-staff">
+        <div class="alert error" id="staffAlert" role="alert"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.5v5.5M12 16.4v.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span></span></div>
+        <form id="staffForm" novalidate>
+          <div class="field" data-field="email">
+            <label for="tEmail">Staff email</label>
+            <div class="input-wrap">
+              <svg class="lead" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="m4.5 7.5 7.5 5.5 7.5-5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <input type="email" id="tEmail" autocomplete="username" placeholder="name@fotostarnepal.com" autocapitalize="off" spellcheck="false">
+            </div>
+            <div class="field-error">Enter your staff email address.</div>
+          </div>
+          <div class="field" data-field="password">
+            <div class="label-row"><label for="tPass" style="margin:0">Password</label></div>
+            <div class="input-wrap">
+              <svg class="lead" viewBox="0 0 24 24" fill="none"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <input type="password" id="tPass" class="has-toggle" autocomplete="current-password" placeholder="Staff password">
+              <button type="button" class="toggle-pw" aria-label="Show password" data-toggle="tPass">
+                <svg class="eye" viewBox="0 0 24 24" fill="none"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+                <svg class="eye-off" viewBox="0 0 24 24" fill="none"><path d="M3 3l18 18M10.6 6a9.6 9.6 0 0 1 1.4-.1c6 0 9.5 6.1 9.5 6.1a16 16 0 0 1-3 3.7M6.4 7.7A16 16 0 0 0 2.5 12S6 18.5 12 18.5c1.5 0 2.9-.4 4.1-1M9.9 10a3 3 0 0 0 4.1 4.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+            <div class="field-error">Enter your password.</div>
+          </div>
+          <div class="row-between">
+            <label class="check"><input type="checkbox" id="tRemember"><span class="box"><svg viewBox="0 0 12 12" fill="none"><path d="m2.5 6.3 2.4 2.4 4.6-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Remember this device</label>
+          </div>
+          <button type="submit" class="btn dark">
+            <span class="spinner" aria-hidden="true"></span>
+            <span class="btn-label">Sign in to staff portal</span><span class="btn-loading-label">Verifying…</span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </form>
+        <p class="legal">Forgot your staff password? Contact the studio administrator.</p>
+      </section>
+
+      <!-- ===== SUCCESS ===== -->
+      <section class="view success" id="view-success">
+        <div class="success-mark"><svg viewBox="0 0 24 24" fill="none"><path d="m5.5 12.5 4.2 4.2 8.8-9.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="eyebrow" id="successEyebrow">Signed in</div>
+        <h1 id="successTitle">Welcome back.</h1>
+        <p class="sub" id="successText">You're signed in.</p>
+        <div class="session-card">
+          <div class="session-row"><span>Name</span><span id="sessName">—</span></div>
+          <div class="session-row"><span>Email</span><span id="sessEmail">—</span></div>
+          <div class="session-row"><span>Role</span><span><span class="badge" id="sessRole">Client</span></span></div>
+          <div class="session-row"><span>Signed in</span><span id="sessTime">—</span></div>
+        </div>
+        <div class="stack">
+          <button type="button" class="btn" id="continueBtn"><span class="btn-label" id="continueLabel">Continue</span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button type="button" class="btn ghost" id="signOutBtn"><span class="btn-label">Sign out</span></button>
+        </div>
+        <div class="progress" id="redirectBar"><i></i></div>
+        <div class="redirect-note" id="redirectNote">Redirecting…</div>
+      </section>
+
+      <p class="legal" id="footLegal">Demo portal only. Account data is stored in this browser and is not a secure authentication service.</p>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =========================================================
+   Foto Star Nepal — Sign in (front-end only demo)
+   - No backend. Client accounts live in this browser's localStorage.
+   - Staff accounts are defined below as salted-style SHA-256 hashes.
+   - NOTE: client-side checks are NOT real security. Replace with a
+     server/auth provider before using this for real staff access.
+   ========================================================= */
+const CONFIG = {
+  redirect: { client: './index.html', staff: './index.html' },
+  autoRedirect: false,          // set true to jump straight after sign-in
+  lockAfter: 5,                 // failed staff attempts before a temporary lock
+  lockSeconds: 30,
+  // sha256("email:password") — demo account: staff@fotostarnepal.com / FotoStar@2026
+  staff: [
+    { email: 'staff@fotostarnepal.com', name: 'Studio Staff', title: 'Staff',
+      hash: '75734a1f6ef48331bf7a97d044fb8bc7f8566cda5b453457047ac07289547b78' }
+  ],
+};
+
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const store = {
+  get(k, session){ try{ return JSON.parse((session?sessionStorage:localStorage).getItem(k)); }catch{ return null; } },
+  set(k, v, session){ try{ (session?sessionStorage:localStorage).setItem(k, JSON.stringify(v)); }catch{} },
+  del(k){ try{ localStorage.removeItem(k); sessionStorage.removeItem(k); }catch{} }
+};
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+async function sha256(text){
+  if(!(window.crypto && crypto.subtle)) throw new Error('secure-context');
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
+}
+function randomSalt(){
+  const a = new Uint8Array(16); crypto.getRandomValues(a);
+  return [...a].map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+/* ---------- State / content per role ---------- */
+let role = 'client';
+let view = 'signin';
+
+const copy = {
+  client: {
+    kicker: 'Client portal',
+    vTitle: 'Moments worth remembering.',
+    vText: 'Sign in to manage your bookings, follow your shoot and keep every memory in one place.',
+    signin: ['Welcome back', 'Sign in to your account.', 'Enter your details to continue.'],
+    signup: ['Join Foto Star', 'Create your account.', 'Book shoots and keep your memories organised.'],
+    forgot: ['Password help', 'Reset your password.', 'Enter your email and we will send a reset link.'],
+  },
+  staff: {
+    kicker: 'Staff portal',
+    vTitle: 'Behind every frame, a team.',
+    vText: 'Secure access for the Foto Star Nepal team to manage bookings, shoots and deliveries.',
+    signin: ['Staff access', 'Sign in to the studio.', 'Use your studio email and password.'],
+  }
+};
+
+function setHeader(a,b,c){
+  const head = $('#head');
+  head.style.opacity = 0;
+  setTimeout(() => {
+    $('#eyebrow').textContent = a; $('#title').textContent = b; $('#subtitle').textContent = c;
+    head.style.opacity = 1;
+  }, 140);
+}
+$('#head').style.transition = 'opacity .25s ease';
+
+function show(id){
+  $$('.view').forEach(v => v.classList.toggle('active', v.id === id));
+  $$('.alert').forEach(a => a.classList.remove('show'));
+}
+
+function render(){
+  const c = copy[role];
+  $('#visualKicker').textContent = c.kicker;
+  $('#visualTitle').textContent = c.vTitle;
+  $('#visualText').textContent = c.vText;
+  $('#roles').dataset.role = role;
+  $$('#roles button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.role === role)));
+  $('#roles').style.display = '';
+  $('#head').style.display = '';
+  $('#footLegal').style.display = '';
+
+  if(role === 'staff'){
+    show('view-staff'); setHeader(...c.signin);
+  } else if(view === 'signup'){
+    show('view-client-signup'); setHeader(...c.signup);
+  } else if(view === 'forgot'){
+    show('view-forgot'); setHeader(...c.forgot);
+  } else {
+    show('view-client-signin'); setHeader(...c.signin);
+  }
+  document.title = (role === 'staff' ? 'Staff sign in' : view === 'signup' ? 'Create account' : 'Sign in') + ' | Foto Star Nepal';
+}
+
+$$('#roles button').forEach(b => b.addEventListener('click', () => {
+  if(role === b.dataset.role) return;
+  role = b.dataset.role; view = 'signin'; render();
+}));
+$$('[data-goto]').forEach(b => b.addEventListener('click', () => { view = b.dataset.goto; render(); }));
+
+/* ---------- Helpers: fields, alerts, buttons ---------- */
+function setInvalid(input, msg){
+  const f = input.closest('.field'); f.classList.add('invalid');
+  if(msg) f.querySelector('.field-error').textContent = msg;
+}
+function clearField(input){ input.closest('.field')?.classList.remove('invalid'); }
+function showAlert(id, msg){
+  const el = $('#'+id); el.querySelector('span').textContent = msg; el.classList.add('show');
+}
+function hideAlert(id){ $('#'+id).classList.remove('show'); }
+function shake(form){ form.classList.remove('shake'); void form.offsetWidth; form.classList.add('shake'); }
+function loading(form, on){ form.querySelector('.btn').classList.toggle('loading', on); }
+$$('input').forEach(i => i.addEventListener('input', () => {
+  clearField(i);
+  const form = i.closest('form'); if(form){ const al = form.parentElement.querySelector('.alert'); if(al && al.classList.contains('error')) al.classList.remove('show'); }
+}));
+
+/* show/hide password */
+$$('.toggle-pw').forEach(b => b.addEventListener('click', () => {
+  const inp = $('#'+b.dataset.toggle); const showing = inp.type === 'text';
+  inp.type = showing ? 'password' : 'text';
+  b.classList.toggle('on', !showing);
+  b.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+}));
+
+/* toast */
+let toastTimer;
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ---------- Password strength ---------- */
+function strengthScore(p){
+  let s = 0;
+  if(p.length >= 8) s++;
+  if(/[a-z]/.test(p) && /[A-Z]/.test(p)) s++;
+  if(/\d/.test(p)) s++;
+  if(/[^A-Za-z0-9]/.test(p) || p.length >= 12) s++;
+  return p ? Math.max(1, s) : 0;
+}
+$('#sPass').addEventListener('input', e => {
+  const s = strengthScore(e.target.value);
+  const bar = $('#strengthBar'); bar.className = 'strength' + (s ? ' s'+s : '');
+  $('#strengthText').textContent = ['Use 8+ characters with letters and numbers.','Weak — add more characters.','Fair — try mixing upper and lower case.','Good — almost there.','Strong password.'][s];
+});
+
+/* ---------- Client accounts (localStorage demo) ---------- */
+const getUsers = () => store.get('fsn_users') || {};
+const saveUsers = u => store.set('fsn_users', u);
+
+$('#signupForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target; hideAlert('signupAlert');
+  const name = $('#sName').value.trim(), email = $('#sEmail').value.trim().toLowerCase(),
+        phone = $('#sPhone').value.trim(), pass = $('#sPass').value, conf = $('#sConfirm').value;
+  let ok = true;
+  if(name.length < 2){ setInvalid($('#sName')); ok = false; }
+  if(!EMAIL_RE.test(email)){ setInvalid($('#sEmail')); ok = false; }
+  if(phone.replace(/\D/g,'').length < 7 || !/^[0-9+().\s-]{7,20}$/.test(phone)){ setInvalid($('#sPhone')); ok = false; }
+  if(pass.length < 8){ setInvalid($('#sPass')); ok = false; }
+  if(pass && conf !== pass){ setInvalid($('#sConfirm')); ok = false; }
+  else if(!conf){ setInvalid($('#sConfirm'), 'Please confirm your password.'); ok = false; }
+  if(!$('#sTerms').checked){ $('#sTerms').closest('.field').classList.add('invalid'); ok = false; }
+  if(!ok){ shake(f); return; }
+
+  loading(f, true);
+  try{
+    await sleep(900);
+    const users = getUsers();
+    if(users[email]){ showAlert('signupAlert','An account with this email already exists. Try signing in.'); shake(f); return; }
+    const salt = randomSalt();
+    users[email] = { name, phone, salt, hash: await sha256(salt + ':' + pass), created: Date.now() };
+    saveUsers(users);
+    startSession({ email, name, role:'client' }, true);
+  }catch(err){
+    showAlert('signupAlert', err.message === 'secure-context'
+      ? 'Secure sign-in needs https:// or localhost. Please open the page from a web server.'
+      : 'Something went wrong. Please try again.');
+    shake(f);
+  }finally{ loading(f, false); }
+});
+
+$('#clientSigninForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target; hideAlert('clientSigninAlert');
+  const email = $('#cEmail').value.trim().toLowerCase(), pass = $('#cPass').value;
+  let ok = true;
+  if(!EMAIL_RE.test(email)){ setInvalid($('#cEmail')); ok = false; }
+  if(!pass){ setInvalid($('#cPass')); ok = false; }
+  if(!ok){ shake(f); return; }
+
+  loading(f, true);
+  try{
+    await sleep(800);
+    const u = getUsers()[email];
+    const good = u && (await sha256(u.salt + ':' + pass)) === u.hash;
+    if(!good){ showAlert('clientSigninAlert','Incorrect email or password. If you are new, create an account first.'); shake(f); return; }
+    startSession({ email, name:u.name, role:'client' }, $('#cRemember').checked);
+  }catch(err){
+    showAlert('clientSigninAlert', err.message === 'secure-context'
+      ? 'Secure sign-in needs https:// or localhost. Please open the page from a web server.'
+      : 'Something went wrong. Please try again.');
+    shake(f);
+  }finally{ loading(f, false); }
+});
+
+$('#forgotForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target; hideAlert('forgotAlert');
+  const email = $('#fEmail').value.trim();
+  if(!EMAIL_RE.test(email)){ setInvalid($('#fEmail')); shake(f); return; }
+  loading(f, true); await sleep(900); loading(f, false);
+  // Same message whether or not the account exists (avoids revealing who has an account).
+  showAlert('forgotAlert','Password reset is not connected in this demo. Please contact the studio for assistance.');
+});
+
+/* ---------- Staff sign in ---------- */
+let attempts = 0, lockedUntil = 0, lockTimer;
+function lockTick(){
+  const left = Math.ceil((lockedUntil - Date.now())/1000);
+  const btn = $('#staffForm .btn');
+  if(left > 0){
+    btn.disabled = true;
+    showAlert('staffAlert', `Too many attempts. Try again in ${left}s.`);
+    $('#staffAlert').className = 'alert info show';
+  } else {
+    clearInterval(lockTimer); btn.disabled = false; attempts = 0; hideAlert('staffAlert');
+  }
+}
+$('#staffForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target; hideAlert('staffAlert'); $('#staffAlert').className = 'alert error';
+  if(Date.now() < lockedUntil) return;
+  const email = $('#tEmail').value.trim().toLowerCase(), pass = $('#tPass').value;
+  let ok = true;
+  if(!EMAIL_RE.test(email)){ setInvalid($('#tEmail')); ok = false; }
+  if(!pass){ setInvalid($('#tPass')); ok = false; }
+  if(!ok){ shake(f); return; }
+
+  loading(f, true);
+  try{
+    await sleep(1000);
+    const h = await sha256(email + ':' + pass);
+    const member = CONFIG.staff.find(s => s.email === email && s.hash === h);
+    if(!member){
+      attempts++;
+      if(attempts >= CONFIG.lockAfter){
+        lockedUntil = Date.now() + CONFIG.lockSeconds*1000;
+        lockTick(); lockTimer = setInterval(lockTick, 1000);
+      } else {
+        const left = CONFIG.lockAfter - attempts;
+        showAlert('staffAlert', `Invalid staff email or password. ${left} attempt${left===1?'':'s'} remaining.`);
+      }
+      shake(f); return;
+    }
+    attempts = 0;
+    startSession({ email, name:member.name, role:'staff', title:member.title }, $('#tRemember').checked);
+  }catch(err){
+    showAlert('staffAlert', err.message === 'secure-context'
+      ? 'Secure sign-in needs https:// or localhost. Please open the page from a web server.'
+      : 'Something went wrong. Please try again.');
+    shake(f);
+  }finally{ if(Date.now() >= lockedUntil) loading(f, false); else loading(f,false); }
+});
+
+/* ---------- Session ---------- */
+function startSession(user, remember){
+  const session = { ...user, at: Date.now() };
+  store.del('fsn_session');
+  store.set('fsn_session', session, !remember);
+  showSuccess(session, true);
+}
+function showSuccess(s, fresh){
+  const isStaff = s.role === 'staff';
+  role = s.role;
+  $('#roles').dataset.role = role;
+  $('#roles').style.display = 'none';
+  $('#head').style.display = 'none';
+  $('#footLegal').style.display = 'none';
+  const first = (s.name || '').split(' ')[0] || 'there';
+  $('#successEyebrow').textContent = fresh ? 'Signed in successfully' : 'Active session';
+  $('#successTitle').textContent = isStaff ? `Welcome, ${first}.` : `Welcome back, ${first}.`;
+  $('#successText').textContent = isStaff
+    ? 'Your staff session is active. Continue to the studio dashboard.'
+    : 'You are signed in. Continue to the website to book a shoot.';
+  $('#sessName').textContent = s.name || '—';
+  $('#sessEmail').textContent = s.email;
+  const badge = $('#sessRole'); badge.textContent = isStaff ? (s.title || 'Staff') : 'Client'; badge.className = 'badge ' + (isStaff ? '' : 'client');
+  $('#sessTime').textContent = new Date(s.at).toLocaleString(undefined,{dateStyle:'medium', timeStyle:'short'});
+  $('#continueLabel').textContent = 'Continue to website';
+  $('#visualKicker').textContent = copy[role].kicker;
+  $('#visualTitle').textContent = copy[role].vTitle;
+  $('#visualText').textContent = copy[role].vText;
+  show('view-success');
+  document.title = 'Signed in | Foto Star Nepal';
+  if(fresh && CONFIG.autoRedirect){
+    $('#redirectBar').classList.add('run'); $('#redirectNote').classList.add('show');
+    setTimeout(go, 2300);
+  }
+}
+function go(){ window.location.href = CONFIG.redirect[role]; }
+$('#continueBtn').addEventListener('click', go);
+$('#signOutBtn').addEventListener('click', () => {
+  store.del('fsn_session');
+  $('#redirectBar').classList.remove('run'); $('#redirectNote').classList.remove('show');
+  view = 'signin'; ['cPass','tPass'].forEach(id => $('#'+id).value = '');
+  render(); toast('You have been signed out.');
+});
+
+/* restore an existing session */
+const existing = store.get('fsn_session', true) || store.get('fsn_session', false);
+if(existing && existing.email) showSuccess(existing, false);
+else render();
+
+/* ESC / enter niceties */
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape' && (view === 'signup' || view === 'forgot') && role === 'client'){ view = 'signin'; render(); }
+});
+</script>
+</body>
+</html>
